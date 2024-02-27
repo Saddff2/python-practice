@@ -51,11 +51,17 @@ def main():
         print("\n1. Create Account\n2. Deposit\n3. Withdraw\n4. Display Account Info\n5. Forgot Account ID\n6. Exit.\n7. All accounts data(only for admins)")
         choice = input("Enter your choice: ")
         if choice == "1":
-            id = input("What's your id number?(teudat zeut) ")
-            owner_name = input("What's your name? ")
-            initial_balance = float(input("What's your balance? "))
-            account = BankAccount.create_account(id, owner_name, initial_balance)
-            print("Account created successfully.")
+            try:
+                id = float(input("What's your id number?(teudat zeut) "))
+                owner_name = input("What's your name? ")
+                if any(char.isdigit() for char in owner_name):
+                    print('Your name cannot be a number')
+                    continue
+                initial_balance = float(input("What's your balance? "))
+                account = BankAccount.create_account(id, owner_name, initial_balance)
+                print("Account created successfully.")
+            except:
+                print('Something wrong')
             
         elif choice == "2":
             id = input("Enter your id number: ")
@@ -73,7 +79,6 @@ def main():
             account = BankAccount.accounts.get(id)
             if account:
                 account.widthdraw(amount)
-                print("Withdrawal successful!")
             else:
                 print("Account not found")
                 
@@ -97,15 +102,18 @@ def main():
                 print("Account not found for the provided name")
         
         elif choice == "6":
+            
             print('Thank you for using Leumi bank, your payment for exiting the bank is 5000 shekel hadash.')
             break
             
         elif choice == "7":
             attempt = input('Write down admin password: ')
             if attempt == BankAccount.admin_password:
-                print('All created accounts:')
+                print('All created accounts:\n')
                 for account in BankAccount.accounts.values():
                     print(account)
+                    print('--'*40)
+
             else:
                 print("Access denied. Look for password.")
             
