@@ -20,7 +20,6 @@ class BankAccount:
         self.balance += amount
         self.transactions.append(f'Deposit: +{amount}')
     
-        
     def widthdraw(self, amount):
         commision = amount * BankAccount.commision_rate
         total_widthdrawal = amount + commision
@@ -42,13 +41,13 @@ class BankAccount:
             
     def __str__(self):
         return f'{self.owner_name}, balance is {self.balance}, identification number is {self.id}'
-    
 
 
 def main():
     print('Welcome to the Leumi bank!')
     while True:
-        print("\n1. Create Account\n2. Deposit\n3. Withdraw\n4. Display Account Info\n5. Forgot Account ID\n6. Exit.\n7. All accounts data(only for admins)")
+        print("\n1. Create Account\n2. Deposit\n3. Withdraw\n4. Display Account Info")
+        print("5. Forgot Account ID\n6. Exit.\n7. All accounts data(only for admins)")
         choice = input("Enter your choice: ")
         if choice == "1":
             try:
