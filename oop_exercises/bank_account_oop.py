@@ -51,7 +51,7 @@ def main():
         choice = input("Enter your choice: ")
         if choice == "1":
             try:
-                id = float(input("What's your id number?(teudat zeut) "))
+                id = int(input("What's your id number?(teudat zeut) "))
                 owner_name = input("What's your name? ")
                 if any(char.isdigit() for char in owner_name):
                     print('Your name cannot be a number')
