@@ -1,9 +1,10 @@
-
+import json
 
 class BankAccount:
     admin_password = '1234'
     accounts = {}
     commision_rate = 0.05
+    filename = 'accounts.json'
     
     def __init__(self, id, owner_name, initial_balance=0):
         self.id = id
@@ -41,9 +42,26 @@ class BankAccount:
             
     def __str__(self):
         return f'{self.owner_name}, balance is {self.balance}, identification number is {self.id}'
-
+    
+    @staticmethod
+    def save_accounts(filename):
+        with open(filename, 'w') as f:
+            json.dump({id: {'owner_name': account.owner_name, 'balance': account.balance} for id, account in BankAccount.accounts.items()}, f, indent=4)
+    
+    @staticmethod
+    def load_accounts(filename):
+        try:
+            with open(filename) as f:
+                data = json.load(f)
+            for id, account_data in data.items():
+                BankAccount(id, account_data['owner_name'], account_data['balance'])
+        except FileNotFoundError:
+            print(f"Error: File '{filename}' not found.")
+        except json.JSONDecodeError:
+            print(f"Error: Failed to decode JSON data from file '{filename}'.")
 
 def main():
+    BankAccount.load_accounts('accounts.json')
     print('Welcome to the Leumi bank!')
     while True:
         print("\n1. Create Account\n2. Deposit\n3. Withdraw\n4. Display Account Info")
@@ -101,7 +119,7 @@ def main():
                 print("Account not found for the provided name")
         
         elif choice == "6":
-            
+            BankAccount.save_accounts('accounts.json')
             print('Thank you for using Leumi bank, your payment for exiting the bank is 5000 shekel hadash.')
             break
             
