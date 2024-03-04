@@ -7,5 +7,5 @@ def sum(a,b):
 def multiplication(a,b):
     return a*b
 
-c = calculator(3,4, multiplication)
+c = calculator(3, 4, lambda b,a: b**a)
 print(c)
