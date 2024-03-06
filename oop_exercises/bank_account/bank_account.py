@@ -15,7 +15,9 @@ class BankAccount:
         
     @classmethod
     def create_account(cls, id, owner_name, initial_balance=0):
-        return cls(id, owner_name, initial_balance)
+        account = cls(id, owner_name, initial_balance)
+        cls.accounts[id] = account  
+        return account
     
     def deposit(self, amount):
         self.balance += amount
@@ -46,7 +48,16 @@ class BankAccount:
     @staticmethod
     def save_accounts(filename):
         with open(filename, 'w') as f:
-            json.dump({id: {'owner_name': account.owner_name, 'balance': account.balance} for id, account in BankAccount.accounts.items()}, f, indent=4)
+            data = {
+                id: {
+                    'owner_name': account.owner_name,
+                    'balance': account.balance,
+                    'transactions': account.transactions
+                } 
+                for id, account in BankAccount.accounts.items()
+            }
+            json.dump(data, f, indent = 4)
+            
     
     @staticmethod
     def load_accounts(filename):
@@ -54,11 +65,11 @@ class BankAccount:
             with open(filename) as f:
                 data = json.load(f)
             for id, account_data in data.items():
-                BankAccount(id, account_data['owner_name'], account_data['balance'])
+                account = BankAccount(id, account_data['owner_name'], account_data['balance'])
+                account.transactions = account_data.get('transactions', [])
+                
         except FileNotFoundError:
             print(f"Error: File '{filename}' not found.")
-        except json.JSONDecodeError:
-            print(f"Error: Failed to decode JSON data from file '{filename}'.")
 
 def main():
     BankAccount.load_accounts('accounts.json')
@@ -66,17 +77,31 @@ def main():
     while True:
         print("\n1. Create Account\n2. Deposit\n3. Withdraw\n4. Display Account Info")
         print("5. Forgot Account ID\n6. Exit.\n7. All accounts data(only for admins)")
+        print('8. Print wealth accounts')
         choice = input("Enter your choice: ")
         if choice == "1":
             try:
-                id = int(input("What's your id number?(teudat zeut) "))
+                id = str(input("What's your id number?(teudat zeut) "))
+                
                 owner_name = input("What's your name? ")
+                
                 if any(char.isdigit() for char in owner_name):
                     print('Your name cannot be a number')
                     continue
+                
                 initial_balance = float(input("What's your balance? "))
+                
+                with open(BankAccount.filename) as f:
+                    data = json.load(f)
+                    if str(id) in data:
+                        print("Account ID already exists. Please choose a different ID.")
+                        continue
+                
                 account = BankAccount.create_account(id, owner_name, initial_balance)
-                print("Account created successfully.")
+                if account:
+                    print("Account created successfully.")
+                else:
+                    print("Failed to create account")
             except:
                 print('Something wrong')
             
@@ -133,7 +158,14 @@ def main():
 
             else:
                 print("Access denied. Look for password.")
-            
+        elif choice == "8":
+            wealth_accounts = list(filter(lambda account: account.balance > 20000, BankAccount.accounts.values()))
+            if wealth_accounts:
+                print("Wealth accounts:")
+                for account in wealth_accounts:
+                    print(f"Account ID: {account.id}, Owner Name: {account.owner_name}, Balance: {account.balance}")
+            else:
+                print("No wealth accounts")
         else:
             print('Invalid choice. Your account was debited for additional 50 shekel hadash for excessive use. Try again.')
 
