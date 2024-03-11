@@ -7,17 +7,19 @@ def check_if(func):
         return a
     return do_it
 
-def check_if2(func):
-    def do_it(a,b):
-        if type(a) == int and type(b) == int:
-            a = func(a,b)
-            if a <= 0:
-                return None
-            return a
-        return 'a or b are not int'
-    return do_it
+def check_if2(from_what):
+    def function(func):
+        def do_it(a,b):
+            if type(a) == int and type(b) == int:
+                a = func(a,b)
+                if a <= from_what:
+                    return None
+                return a
+            return 'a or b are not int'
+        return do_it
+    return function
 
-@check_if2
+@check_if2(3)
 def my_func(a,b):
     return a+b
 
@@ -38,6 +40,6 @@ def check_if_zero(a):
     return a
 
 
-print(my_func(13,27))
+print(my_func(1,2))
 print(my_func(15,'print'))
 print(my_func(1,-2))

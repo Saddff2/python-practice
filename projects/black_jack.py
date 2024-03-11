@@ -1,37 +1,37 @@
 import random, sys
 
-HEARTS = chr(9829) # Символ 9829 — '♥'
-DIAMONDS = chr(9830) # Символ 9830 — '♦'.
-SPADES = chr(9824) # Символ 9824 — '♠'.
-CLUBS = chr(9827) # Символ 9827 — '♣'.
+HEARTS = chr(9829) # Symbol 9829 — '♥'
+DIAMONDS = chr(9830) # Symbol 9830 — '♦'.
+SPADES = chr(9824) # Symbol 9824 — '♠'.
+CLUBS = chr(9827) # Symbol 9827 — '♣'.
 
 BACKSIDE = 'backside'
 
 def main():
-    print('''Правила:
-        Попытайся дойти до 21 как можно ближе,
-        дама король валет - 10 очков
-        туз - 1 или 11
-        обычные карты 2-10 по их значению
-        (H)it что бы взятьк арту
-        (S)tand чтобы закончить брать карты
-        В начале ты можешь нажать (D)ouble down чтобы удвоить ставку
-        В случае ничьи деньги возвращаются игроку''')
+    print('''Rules:
+        Try to get to 21 as close as possible,
+        Jack, Queen, King - 10 очков
+        Ace - 1 или 11
+        Other cards 2-10 for each value
+        (H)it to take card
+        (S)tand to stop taking cards
+        In begging you can (D)ouble down to double your bet
+        In case of draw money returns to player''')
     
     money = 5000
     while True:
         if money <= 0:
-            print('У тебя кончились деньги ты проиграл')
+            print("You've run out of money. You lose.")
             sys.exit()
     
-        print('Деньги: ', money)
+        print('Money: ', money)
         bet = getBet(money)
         
         deck = getDeck()
         dealerHand = [deck.pop(), deck.pop()]
         playerHand = [deck.pop(), deck.pop()]
 
-        print("Ставка:", bet)
+        print("Bet:", bet)
         while True:
             displayHands(playerHand, dealerHand, False)
             print()
@@ -43,13 +43,13 @@ def main():
             if move == 'D':
                 additionalBet = getBet(min(bet, (money -bet)))
                 bet += additionalBet
-                print("Ставка увеличена на {}.".format(bet))
-                print("Ставка:", bet)
+                print("Bet increased by {}.".format(bet))
+                print("Bet:", bet)
 
             if move in ('H', 'D'):
                 newCard = deck.pop()
                 rank, suit = newCard
-                print('Ты вытащил {} {}.'.format(rank, suit))
+                print('You draw {} {}.'.format(rank, suit))
                 playerHand.append(newCard)
 
                 if getHandValue(playerHand) > 21:
@@ -60,13 +60,13 @@ def main():
             
         if getHandValue(playerHand) <= 21:
             while getHandValue(dealerHand) < 17:
-                print("Дилер берет...")
+                print("Dealer takes...")
                 dealerHand.append(deck.pop())
                 displayHands(playerHand, dealerHand, False)
 
                 if getHandValue(dealerHand) > 21:
                     break
-                input("Нажмите enter чтобы продолжить..")
+                input("Press ENTER to continue..")
                 print('\n\n')
 
         displayHands(playerHand, dealerHand, True)
@@ -75,23 +75,23 @@ def main():
         dealerValue = getHandValue(dealerHand)
 
         if dealerValue > 21:
-            print("Дилер проиграл!Ты выиграл ${}".format(bet))
+            print("Dealer lose!You win ${}!".format(bet))
             money += bet
         elif (playerValue > 21) or (playerValue < dealerValue):
-            print("Ты проиграл!")
+            print("You lose!")
             money -= bet
         elif (playerValue > dealerValue):
-            print("Ты выиграл {}$".format(bet))
+            print("You win {}$".format(bet))
             money += bet
         elif playerValue == dealerValue:
-            print("Ничья, деньги возвращаются")
+            print("Draw, money returns to player")
 
-        input('Нажми Enter чтобы продолжить..')
+        input('Press ENTER to continue.')
         print('\n\n')
 
 def getBet(maxBet):
     while True:
-        print("Сколько ты хочешь поставить?(1-{}, или QUIT)".format(maxBet))
+        print("How much you want to bet?(1-{}, или QUIT)".format(maxBet))
         bet = input('>').upper().strip()
         if bet == "QUIT":
             sys.exit()
@@ -117,13 +117,13 @@ def getDeck():
 def displayHands(playerHand, dealerHand, showDealerHand):
     print()
     if showDealerHand:
-        print("Дилер:", getHandValue(dealerHand))
+        print("Dealer:", getHandValue(dealerHand))
         displayCards(dealerHand)
     else: 
-        print("Диллер: ???")
+        print("Dealer: ???")
         displayCards([BACKSIDE] + dealerHand[1:])
 
-    print('Игрок: ', getHandValue(playerHand))
+    print('Player: ', getHandValue(playerHand))
     displayCards(playerHand)
 
 
@@ -166,16 +166,16 @@ def displayCards(cards):
 
 
 def getMove(playerHand, money):
-    moves = ['(H)Еще', '(S)Хватит']
+    moves = ['(H)it', '(S)tand']
 
     if len(playerHand) == 2 and money > 0:
-        moves.append('(D)Повысить')
+        moves.append('(D)ouble down')
 
     movePrompt = ', '.join(moves) + '> '
     move = input(movePrompt).upper()
     if move in ('H', 'S'):
         return move
-    if move == 'D' and '(D)Повысить' in moves:
+    if move == 'D' and '(D)ouble down' in moves:
         return move
     
 if __name__ == '__main__':
