@@ -10,9 +10,9 @@ BACKSIDE = 'backside'
 def main():
     print('''Rules:
         Try to get to 21 as close as possible,
-        Jack, Queen, King - 10 очков
-        Ace - 1 или 11
-        Other cards 2-10 for each value
+        Jack, Queen, King - 10 points
+        Ace - 1 or 11 points
+        Other cards 2-10 points for value
         (H)it to take card
         (S)tand to stop taking cards
         In begging you can (D)ouble down to double your bet
