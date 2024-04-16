@@ -1,11 +1,8 @@
 from flask import Flask
-
 app = Flask(__name__)
 
-@app.route("/")
+@app.route('/')
 def hello_cloud():
-  """Displays Hello, Cloud! message on the root path."""
-  return "Hello, Cloud!"
+  return 'Hello Cloud!'
 
-if __name__ == "__main__":
-  app.run(debug=True)
+app.run(host='0.0.0.0')
