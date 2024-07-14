@@ -2,8 +2,8 @@ from openai import OpenAI
 import aiogram
 
 
-client = OpenAI(api_key='chatgpt api token')
-TOKEN_API = "telegram bot token"
+client = OpenAI(api_key='api_key')
+TOKEN_API = "token_api"
 
 
 bot = aiogram.Bot(TOKEN_API)
